@@ -1,9 +1,9 @@
-# echo "initializing conda"
-# echo ""
+echo "initializing conda"
+echo "(for FSU RCC users)"
 
-# module load anaconda
-# conda init bash
-# source ~/.bashrc
+module load anaconda
+conda init bash
+source ~/.bashrc
 
 echo ""
 echo "creating temporary conda environment"
