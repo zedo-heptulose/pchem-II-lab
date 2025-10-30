@@ -238,3 +238,92 @@ def ring_wave_animation(R=1.0, a=0.18, m=4, c=1.0, Nframes=160, Nt=360):
     html = ani.to_jshtml()
     plt.close(fig)
     return HTML(html)
+
+def minimize_rayleigh(L, N, phi0_fn, rq_fn, method="L-BFGS-B", maxiter=200000, ftol=1e-12, plot=True, penalty_weight=1e-2, jitter=1e-6):
+    """
+    Perform Rayleigh-quotient minimization for a 1D cavity with Dirichlet boundaries
+    and return the converged standing-wave shape.
+
+    Parameters
+    ----------
+    L : float
+        Length of the domain.
+    N : int
+        Number of grid points for the discretization.
+    phi0_fn : callable
+        Function phi0_fn(x, L) -> array of shape (N,), initial guess satisfying φ(0)=φ(L)=0.
+    rq_fn : callable
+        Function rq_fn(phi, dx) -> float that computes the Rayleigh quotient.
+    method : str, optional
+        Optimization method (default "L-BFGS-B").
+    maxiter : int, optional
+        Maximum number of optimization iterations.
+    ftol : float, optional
+        Function tolerance for convergence.
+    plot : bool, optional
+        If True, show a plot of the converged mode.
+
+    Returns
+    -------
+    phi_star : ndarray of shape (N,)
+        Normalized converged mode profile.
+    """
+
+    import numpy as np
+    import matplotlib.pyplot as plt
+    from scipy.optimize import minimize
+
+    # Discretize domain
+    x  = np.linspace(0.0, L, N)
+    dx = x[1] - x[0]
+
+    # Generate initial guess
+    phi0 = np.asarray(phi0_fn(x, L), dtype=float)
+    phi0[0]  = 0.0
+    phi0[-1] = 0.0
+
+    # Optimization variables (interior only)
+    u0 = phi0[1:-1].copy()
+
+    def objective(u_vec):
+        phi = np.zeros_like(phi0)
+        phi[1:-1] = u_vec
+        
+        # Rayleigh quotient from user (scale-invariant)
+        R = rq_fn(phi, dx)
+        # Soft constraint toward ||phi||_2^2 = 1 (under the grid measure)
+        #den = float(np.sum(phi**2) * dx)
+        return R #+ penalty_weight * (den - 1.0)**2
+
+    # Run minimization
+    res = minimize(
+        objective,
+        u0,
+        method="L-BFGS-B",
+        options={"maxiter": 200000, "maxfun": 200000, "ftol": 1e-12})
+    
+    # Rebuild and normalize converged wave
+    phi_star = np.zeros_like(phi0)
+    phi_star[1:-1] = res.x
+    phi_star[0]  = 0.0
+    phi_star[-1] = 0.0
+
+    norm2 = np.sum(phi_star**2) * dx
+    if norm2 > 0:
+        phi_star /= np.sqrt(norm2)
+
+    # Plot the result 
+    if plot:
+        plt.figure(figsize=(6, 3))
+        plt.plot(x, phi_star, lw=2, color='royalblue')
+        plt.axhline(0.0, color='black', lw=0.8, alpha=0.6)
+        plt.scatter([x[0], x[-1]], [0.0, 0.0], color='black', s=20)
+        plt.xlabel("x")
+        plt.ylabel(r"$\phi(x)$")
+        plt.title("Converged Standing Wave (Ground State)")
+        plt.grid(True, alpha=0.3)
+        plt.tight_layout()
+        plt.show()
+
+    return x, phi_star
+
