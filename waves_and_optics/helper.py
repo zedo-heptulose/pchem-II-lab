@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import scipy
+from matplotlib import animation
+from IPython.display import HTML
 
 # Superposition Plot
 def superposition_plot(f1, p1, f2, p2):
@@ -58,3 +60,181 @@ def fourier_transform(signal):
     positive_frequencies = frequencies[:n // 2]
     fft_signal_magnitude = np.abs(fft_signal[:n // 2])
     return positive_frequencies, fft_signal_magnitude
+
+def standing_animation(omega = 2, Nframes=240, interval_ms=40):
+    """
+    Generate and display an animation of a standing wave for a given frequency.
+
+    Parameters
+    ----------
+    omega : float
+        Angular frequency of the wave (rad/s). Determines how fast
+        the standing wave oscillates in time. For this function,
+        the wave speed c is assumed to be 1, so omega = k.
+
+    Nframes : int, optional
+        Number of frames in the animation. A higher number results
+        in smoother motion but requires more computation. Default is 240.
+
+    interval_ms : int, optional
+        Time interval between animation frames in milliseconds.
+        Controls the playback speed. Default is 40.
+    """
+    # -------- parameters you may adjust --------
+    k = omega                            # spatial wavenumber
+    x = np.linspace(-np.pi, np.pi, 700)  # centered spatial domain
+    # ------------------------------------------
+
+    
+    # Traveling waves (sine => node at x=0 in the sum)
+    E_r = lambda x,t: np.sin(k*x - omega*t)   # right-moving
+    E_l = lambda x,t: np.sin(k*x + omega*t)   # left-moving
+    E_sum = lambda x,t: E_r(x,t) + E_l(x,t)   # standing wave = 2 sin(kx) cos(ωt)
+    
+    # Build figure/axes
+    fig, ax = plt.subplots(figsize=(7.2, 3.4))
+    (line_r,)   = ax.plot([], [], label="Right-moving")
+    (line_l,)   = ax.plot([], [], label="Left-moving")
+    (line_sum,) = ax.plot([], [], lw=2, label="Standing wave (sum)")
+    
+    # markers at x=0 for each curve (1-element sequences in updates)
+    (point_r,)   = ax.plot([], [], "o", ms=5, color=line_r.get_color())
+    (point_l,)   = ax.plot([], [], "o", ms=5, color=line_l.get_color())
+    (point_sum,) = ax.plot([], [], "o", ms=5, color=line_sum.get_color())
+    
+    ax.set_xlim(x.min(), x.max())
+    ax.set_ylim(-2.2, 2.2)
+    ax.set_xticks([])                 # remove x ticks
+    ax.set_xlabel(r"$x$")
+    ax.set_ylabel(r"$E(x,t)$")
+    ax.legend(loc="upper right")
+    ax.grid(True, alpha=0.3)
+    
+    # Drive animation by phase so the loop closes exactly
+    phases = np.linspace(0.0, 2*np.pi, Nframes, endpoint=False)
+    
+    def init():
+        # start with empty lines/points
+        for ln in (line_r, line_l, line_sum):
+            ln.set_data([], [])
+        for pt in (point_r, point_l, point_sum):
+            pt.set_data([], [])
+        return line_r, line_l, line_sum, point_r, point_l, point_sum
+    
+    def animate(theta):
+        # phase -> time
+        t = theta / omega
+        Er = E_r(x, t)
+        El = E_l(x, t)
+        Es = Er + El
+    
+        line_r.set_data(x, Er)
+        line_l.set_data(x, El)
+        line_sum.set_data(x, Es)
+    
+        # markers at x=0 (use 1-element sequences)
+        point_r.set_data([0.0], [E_r(0.0, t)])
+        point_l.set_data([0.0], [E_l(0.0, t)])
+        point_sum.set_data([0.0], [E_sum(0.0, t)])  # always ~ 0 because sin(0)=0
+    
+        return line_r, line_l, line_sum, point_r, point_l, point_sum
+    
+    ani = animation.FuncAnimation(
+        fig, animate, init_func=init,
+        frames=phases, interval=interval_ms, blit=False
+    )
+    
+    # Render as HTML and suppress extra static figure
+    html = ani.to_jshtml()
+    plt.close(fig)
+    return HTML(html)
+
+def ring_wave_animation(R=1.0, a=0.18, m=4, c=1.0, Nframes=160, Nt=360):
+    """
+    Generate an animation of a standing or traveling wave wrapped around a circular ring.
+
+    Parameters
+    ----------
+    R : float, optional
+        Base radius of the ring (mean distance from center). Default is 1.0.
+
+    a : float, optional
+        Radial modulation amplitude — how far the wave oscillates inward/outward
+        relative to the base radius. Default is 0.18.
+
+    m : int, optional
+        Mode number (number of wavelengths around the loop). Determines the
+        number of nodes along the ring. Default is 4.
+
+    c : float, optional
+        Wave propagation speed. Default is 1.0.
+
+    Nframes : int, optional
+        Number of frames in the animation (higher values yield smoother motion
+        but increase rendering time and file size). Default is 160.
+
+    Nt : int, optional
+        Number of angular sampling points around the ring (higher values yield
+        smoother curves but heavier computation). Default is 360.
+    """
+    omega = c*m
+    theta = np.linspace(0, 2*np.pi, Nt, endpoint=False)
+    
+    # traveling and standing fields on the ring
+    E_right = lambda th, t: np.cos(m*th - omega*t)      # clockwise
+    E_left  = lambda th, t: np.cos(m*th + omega*t)      # counter-clockwise
+    E_sum   = lambda th, t: E_right(th,t) + E_left(th,t)# standing = 2 cos(mθ) cos(ωt)
+    
+    cos_mtheta = np.cos(m*theta)
+    node_idx = np.where(np.sign(cos_mtheta[:-1]) * np.sign(cos_mtheta[1:]) < 0)[0]
+    node_angles = theta[node_idx]
+    
+    fig, axes = plt.subplots(1, 3, figsize=(10, 3.6), subplot_kw={"aspect":"equal"})
+    titles = ["Right-moving", "Left-moving", "Standing (sum)"]
+    lines, markers = [], []
+    
+    
+    for ax, ttl in zip(axes, titles):
+        ax.set_xlim(-1.35, 1.35); ax.set_ylim(-1.35, 1.35)
+        ax.set_xticks([]); ax.set_yticks([])
+        ax.set_title(ttl)
+        
+        (ln,) = ax.plot([], [], lw=2)
+        lines.append(ln)
+        if ttl.startswith("Standing"):
+            mk = []
+            for ang in node_angles:
+                mk.append(ax.plot([R*np.cos(ang)], [R*np.sin(ang)], "k.", ms=5, alpha=0.9)[0])
+            markers.append(mk)
+        else:
+            markers.append([])
+    
+    phases = np.linspace(0, 2*np.pi, Nframes, endpoint=False)
+    
+    def ring_xy(field_vals):
+        r = R + a*field_vals
+        x = r*np.cos(theta)
+        y = r*np.sin(theta)
+        # append first point to close the stroke
+        return np.append(x, x[0]), np.append(y, y[0])
+    
+    def init():
+        for ln in lines: ln.set_data([], [])
+        return lines + sum(markers, [])
+    
+    def animate(phi):
+        t = phi/omega
+        xr, yr = ring_xy(E_right(theta, t))
+        xl, yl = ring_xy(E_left(theta, t))
+        xs, ys = ring_xy(E_sum(theta, t))
+        lines[0].set_data(xr, yr)
+        lines[1].set_data(xl, yl)
+        lines[2].set_data(xs, ys)
+        return lines + sum(markers, [])
+    
+    ani = animation.FuncAnimation(fig, animate, init_func=init,
+                                  frames=phases, interval=50, blit=False)
+    
+    html = ani.to_jshtml()
+    plt.close(fig)
+    return HTML(html)
