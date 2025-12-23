@@ -1,5 +1,6 @@
 import os
-def process_all_data(folder):
+import pandas as pd
+def process_all_data(folder, process_spectrum):
     filenames = os.listdir(folder) 
     csv_files = [file for file in filenames if file.endswith('.csv')]
     
@@ -8,7 +9,7 @@ def process_all_data(folder):
     cutoff_voltages = []
     
     for filename in csv_files:
-        wavelength, frequency, cutoff_voltage = process_spectrum(filename)
+        wavelength, frequency, cutoff_voltage = process_spectrum('./data/' + filename, False)
         wavelengths.append(wavelength)
         frequencies.append(frequency)
         cutoff_voltages.append(cutoff_voltage)
