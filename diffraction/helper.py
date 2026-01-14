@@ -888,13 +888,15 @@ def plot_planes(fig,ax,hkl,a=4.09):
     return fig, ax 
 
 def visualize_mirror_planes(h,k,l):
+    plt.cla()
     fig = plt.figure(figsize=(4,5))
     a=4.0
     ax = fig.add_subplot(projection='3d')
     plot_lattice(fig,ax,a)
     hkl = (h,k,l)
     plot_planes(fig,ax,hkl,a)
-
+    plt.show()
+    
 def interactive_mirror_plot():
     widgets.interact(visualize_mirror_planes,h=(-2,2,1),k=(-2,2,1),l=(-2,2,1))
 
@@ -1009,9 +1011,11 @@ def classify_cubic_spectra(hkl_list):
         result = 'simple cubic'
     return result
 
-def plot_spectrum(x,y):
-    plt.plot(x,y)
-    plt.title('intensity vs $2\\theta$')
-    plt.xlabel('$2\\theta$')
-    plt.ylabel('intensity')
+def plot_spectrum(x, y):
+    fig, ax = plt.subplots(figsize=(6, 3))
+    ax.plot(x, y)
+    ax.set_title(r'intensity vs $2\theta$')
+    ax.set_xlabel(r'$2\theta$')
+    ax.set_ylabel('intensity')
     plt.show()
+    return fig, ax
