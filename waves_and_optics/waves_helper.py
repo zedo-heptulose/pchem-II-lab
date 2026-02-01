@@ -61,38 +61,38 @@ def fourier_transform(signal):
     fft_signal_magnitude = np.abs(fft_signal[:n // 2])
     return positive_frequencies, fft_signal_magnitude
 
-def standing_animation(omega = 2, Nframes=240, interval_ms=40):
+def standing_animation(wavelength=0.5, Nframes=90, interval_ms=50):
     """
-    Generate and display an animation of a standing wave for a given frequency.
+    Generate and display an animation of a standing wave for a given wavelength.
 
     Parameters
     ----------
-    omega : float
-        Angular frequency of the wave (rad/s). Determines how fast
-        the standing wave oscillates in time. For this function,
-        the wave speed c is assumed to be 1, so omega = k.
+    wavelength : float
+        Wavelength of the wave. Smaller wavelengths mean more oscillations
+        in the viewing window. Default is 0.5.
 
     Nframes : int, optional
         Number of frames in the animation. A higher number results
-        in smoother motion but requires more computation. Default is 240.
+        in smoother motion but requires more computation. Default is 90.
 
     interval_ms : int, optional
         Time interval between animation frames in milliseconds.
-        Controls the playback speed. Default is 40.
+        Controls the playback speed. Default is 50.
     """
-    # -------- parameters you may adjust --------
-    k = omega                            # spatial wavenumber
-    x = np.linspace(-np.pi, np.pi, 700)  # centered spatial domain
-    # ------------------------------------------
+    # -------- wave parameters --------
+    # Using c = 1 units, so frequency nu = 1/wavelength
+    nu = 1.0 / wavelength
+    x = np.linspace(-1, 1, 200)  # fixed domain; shows more wavelengths as λ decreases
+    # ---------------------------------
 
-    
     # Traveling waves (sine => node at x=0 in the sum)
-    E_r = lambda x,t: np.sin(k*x - omega*t)   # right-moving
-    E_l = lambda x,t: np.sin(k*x + omega*t)   # left-moving
-    E_sum = lambda x,t: E_r(x,t) + E_l(x,t)   # standing wave = 2 sin(kx) cos(ωt)
+    # E(x,t) = sin(2π(x/λ - νt)) for right-moving wave
+    E_r = lambda x, t: np.sin(2 * np.pi * (x / wavelength - nu * t))   # right-moving
+    E_l = lambda x, t: np.sin(2 * np.pi * (x / wavelength + nu * t))   # left-moving
+    E_sum = lambda x, t: E_r(x, t) + E_l(x, t)   # standing wave
     
     # Build figure/axes
-    fig, ax = plt.subplots(figsize=(7.2, 3.4))
+    fig, ax = plt.subplots(figsize=(9, 3.75), dpi=72)
     (line_r,)   = ax.plot([], [], label="Right-moving")
     (line_l,)   = ax.plot([], [], label="Left-moving")
     (line_sum,) = ax.plot([], [], lw=2, label="Standing wave (sum)")
@@ -111,7 +111,7 @@ def standing_animation(omega = 2, Nframes=240, interval_ms=40):
     ax.grid(True, alpha=0.3)
     
     # Drive animation by phase so the loop closes exactly
-    phases = np.linspace(0.0, 2*np.pi, Nframes, endpoint=False)
+    phases = np.linspace(0.0, wavelength, Nframes, endpoint=False)  # one full period (T = λ/c = λ)
     
     def init():
         # start with empty lines/points
@@ -121,9 +121,7 @@ def standing_animation(omega = 2, Nframes=240, interval_ms=40):
             pt.set_data([], [])
         return line_r, line_l, line_sum, point_r, point_l, point_sum
     
-    def animate(theta):
-        # phase -> time
-        t = theta / omega
+    def animate(t):
         Er = E_r(x, t)
         El = E_l(x, t)
         Es = Er + El
@@ -149,7 +147,7 @@ def standing_animation(omega = 2, Nframes=240, interval_ms=40):
     plt.close(fig)
     return HTML(html)
 
-def ring_wave_animation(R=1.0, a=0.18, m=4, c=1.0, Nframes=160, Nt=360):
+def ring_wave_animation(R=1.0, a=0.18, m=4, c=1.0, Nframes=40, Nt=120):
     """
     Generate an animation of a standing or traveling wave wrapped around a circular ring.
 
@@ -171,11 +169,11 @@ def ring_wave_animation(R=1.0, a=0.18, m=4, c=1.0, Nframes=160, Nt=360):
 
     Nframes : int, optional
         Number of frames in the animation (higher values yield smoother motion
-        but increase rendering time and file size). Default is 160.
+        but increase rendering time and file size). Default is 40.
 
     Nt : int, optional
         Number of angular sampling points around the ring (higher values yield
-        smoother curves but heavier computation). Default is 360.
+        smoother curves but heavier computation). Default is 120.
     """
     omega = c*m
     theta = np.linspace(0, 2*np.pi, Nt, endpoint=False)
@@ -189,7 +187,7 @@ def ring_wave_animation(R=1.0, a=0.18, m=4, c=1.0, Nframes=160, Nt=360):
     node_idx = np.where(np.sign(cos_mtheta[:-1]) * np.sign(cos_mtheta[1:]) < 0)[0]
     node_angles = theta[node_idx]
     
-    fig, axes = plt.subplots(1, 3, figsize=(10, 3.6), subplot_kw={"aspect":"equal"})
+    fig, axes = plt.subplots(1, 3, figsize=(8, 2.8), dpi=80, subplot_kw={"aspect":"equal"})
     titles = ["Right-moving", "Left-moving", "Standing (sum)"]
     lines, markers = [], []
     
@@ -238,6 +236,169 @@ def ring_wave_animation(R=1.0, a=0.18, m=4, c=1.0, Nframes=160, Nt=360):
     html = ani.to_jshtml()
     plt.close(fig)
     return HTML(html)
+
+def spherical_harmonic_plot(l, m):
+    """
+    Plot a 3D surface visualization of the real spherical harmonic Y_l^m.
+
+    The plot shows the angular part of atomic orbitals, with the radial distance
+    from the origin representing |Y_l^m| and colors indicating the sign
+    (positive = blue, negative = orange).
+
+    Parameters
+    ----------
+    l : int
+        Degree of the harmonic (l >= 0). This corresponds to the angular
+        momentum quantum number in atomic orbitals:
+        l=0 -> s orbitals, l=1 -> p orbitals, l=2 -> d orbitals, etc.
+
+    m : int
+        Order of the harmonic (-l <= m <= l). This corresponds to the
+        magnetic quantum number in atomic orbitals.
+
+    Returns
+    -------
+    None
+        Displays a 3D matplotlib figure.
+    """
+    from scipy.special import sph_harm
+    
+    # Validate inputs
+    if l < 0:
+        raise ValueError(f"l must be >= 0, got {l}")
+    if abs(m) > l:
+        raise ValueError(f"|m| must be <= l, got m={m}, l={l}")
+    
+    # Create grid of angles
+    # theta = azimuthal angle [0, 2pi], phi = polar angle [0, pi]
+    theta = np.linspace(0, 2 * np.pi, 100)
+    phi = np.linspace(0, np.pi, 50)
+    theta_grid, phi_grid = np.meshgrid(theta, phi)
+    
+    # Compute spherical harmonic (scipy uses physics convention)
+    Y = sph_harm(m, l, theta_grid, phi_grid)
+    
+    # Take real part (for m != 0, this gives the "real" spherical harmonics
+    # that correspond to px, py, dxy, etc.)
+    if m > 0:
+        Y_real = np.real(Y) * np.sqrt(2) * (-1)**m
+    elif m < 0:
+        Y_real = np.imag(Y) * np.sqrt(2) * (-1)**m
+    else:
+        Y_real = np.real(Y)
+    
+    # Use |Y| as radial distance, sign for coloring
+    r = np.abs(Y_real)
+    
+    # Convert to Cartesian coordinates
+    x = r * np.sin(phi_grid) * np.cos(theta_grid)
+    y = r * np.sin(phi_grid) * np.sin(theta_grid)
+    z = r * np.cos(phi_grid)
+    
+    # Create color array based on sign
+    colors = np.where(Y_real >= 0, 1.0, 0.0)
+    
+    # Plot
+    fig = plt.figure(figsize=(8, 6))
+    ax = fig.add_subplot(111, projection='3d')
+    
+    # Use a diverging colormap centered at 0.5
+    from matplotlib.colors import ListedColormap
+    cmap = ListedColormap(['#ff7f0e', '#1f77b4'])  # orange for negative, blue for positive
+    
+    ax.plot_surface(x, y, z, facecolors=cmap(colors), 
+                    rstride=1, cstride=1, alpha=0.8, linewidth=0)
+    
+    # Set equal aspect ratio
+    max_range = np.max(r) * 1.1
+    ax.set_xlim([-max_range, max_range])
+    ax.set_ylim([-max_range, max_range])
+    ax.set_zlim([-max_range, max_range])
+    
+    # Labels
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    ax.set_zlabel('z')
+    ax.set_title(f'Spherical Harmonic $Y_{l}^{m}$ (l={l}, m={m})')
+    
+    plt.tight_layout()
+    plt.show()
+
+
+def photon_energy(L, n):
+    """
+    Calculate the photon energy for mode n in a cavity of length L.
+    
+    For a cavity with mirrors at both ends, only wavelengths λ_n = 2L/n are allowed.
+    This function computes the corresponding photon energy E = hc/λ and identifies
+    the region of the electromagnetic spectrum.
+    
+    Parameters
+    ----------
+    L : float
+        Length of the cavity in nanometers.
+    n : int
+        Mode number (n = 1, 2, 3, ...).
+    
+    Returns
+    -------
+    dict
+        Dictionary containing:
+        - 'wavelength_nm': float, wavelength in nanometers
+        - 'energy_eV': float, energy in electron volts
+        - 'spectrum': str, region of electromagnetic spectrum
+    
+    Examples
+    --------
+    >>> photon_energy(500, 1)  # 500 nm cavity, mode 1
+    """
+    # hc in convenient units: eV·nm
+    hc = 1240  # eV·nm
+    
+    # Validate input
+    if n < 1:
+        raise ValueError(f"Mode number n must be a positive integer, got {n}")
+    if L <= 0:
+        raise ValueError(f"Cavity length L must be positive, got {L}")
+    
+    # Calculate wavelength (nm) and energy (eV)
+    wavelength_nm = 2 * L / n
+    energy_eV = hc / wavelength_nm
+    
+    # Determine spectrum region
+    if wavelength_nm < 10:
+        spectrum = "X-ray"
+    elif wavelength_nm < 400:
+        spectrum = "Ultraviolet (UV)"
+    elif wavelength_nm < 450:
+        spectrum = "Violet"
+    elif wavelength_nm < 495:
+        spectrum = "Blue"
+    elif wavelength_nm < 570:
+        spectrum = "Green"
+    elif wavelength_nm < 590:
+        spectrum = "Yellow"
+    elif wavelength_nm < 620:
+        spectrum = "Orange"
+    elif wavelength_nm < 750:
+        spectrum = "Red"
+    elif wavelength_nm < 1e6:
+        spectrum = "Infrared (IR)"
+    else:
+        spectrum = "Microwave/Radio"
+    
+    # Print results
+    print(f"Mode n = {n} in cavity L = {L:.1f} nm:")
+    print(f"  Wavelength: λ = {wavelength_nm:.1f} nm")
+    print(f"  Energy: E = {energy_eV:.3f} eV")
+    print(f"  Spectrum: {spectrum}")
+    
+    return {
+        'wavelength_nm': wavelength_nm,
+        'energy_eV': energy_eV,
+        'spectrum': spectrum
+    }
+
 
 def minimize_rayleigh(L, N, phi0_fn, rq_fn, method="L-BFGS-B", maxiter=200000, ftol=1e-12, plot=True, penalty_weight=1e-2, jitter=1e-6):
     """
