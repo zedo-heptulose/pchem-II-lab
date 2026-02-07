@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import ipywidgets as widgets
 import pandas as pd
+from IPython.display import clear_output
 
 def distance_mc_runner(answer_distance, answer_interact, axis_limit=10):
     """
@@ -50,9 +51,11 @@ def distance_mc_runner(answer_distance, answer_interact, axis_limit=10):
 
     # --- Plotting target function ---
     def distance_between_points(v1_x, v1_y, v2_x, v2_y):
+        clear_output(wait=True)
+        plt.close('all')
         dist = distance_forms[answer_distance](v1_x, v1_y, v2_x, v2_y)
 
-        plt.figure(figsize=(6, 6))
+        plt.figure(figsize=(6, 6), dpi=72)
         # Points
         plt.scatter([v1_x], [v1_y], color='tab:blue', label=f"P₁=({v1_x:.1f},{v1_y:.1f})", zorder=3)
         plt.scatter([v2_x], [v2_y], color='tab:orange', label=f"P₂=({v2_x:.1f},{v2_y:.1f})", zorder=3)
@@ -116,7 +119,9 @@ class SuperpositionVisualizer:
         return positive_frequencies, fft_signal_magnitude
 
     def superposition_plot(self, f1, p1, f2, p2):
-        fig, (ax1, ax2) = plt.subplots(2, 1)
+        clear_output(wait=True)
+        plt.close('all')
+        fig, (ax1, ax2) = plt.subplots(2, 1, dpi=72)
 
         x, y_1, y_2, y_superposition = self.waves_and_superposition(f1, p1, f2, p2)
 
@@ -154,6 +159,8 @@ class SuperpositionVisualizer:
         )
 
 def intensity_amplitude_plot(wavelength,amplitude):
+    clear_output(wait=True)
+    plt.close('all')
     wavenumber = 1/ wavelength
     w = 2 * np.pi * wavenumber
     x = np.linspace(-1000, 1000, 500)
@@ -204,6 +211,7 @@ def double_slit_plot_template(theta_deg, d=1000, wavelength=400):
     fig, (ax1, ax2) = plt.subplots(
         2, 1,
         figsize=(8, 6),
+        dpi=72,
         constrained_layout=True
     )
 
@@ -237,6 +245,8 @@ def double_slit_plot_template(theta_deg, d=1000, wavelength=400):
 
 
 def plot_double_slit(theta):
+    clear_output(wait=True)
+    plt.close('all')
     d = 1000
     wavelength = 400
     fig, (ax1, ax2) = double_slit_plot_template(
@@ -351,6 +361,7 @@ def diffraction_plot_template(theta_deg, d=1000, wavelength=400, iterations=25, 
     fig, (ax1, ax2, ax3) = plt.subplots(
         3, 1,
         figsize=(8, 10),
+        dpi=72,
         constrained_layout=True
     )
 
@@ -361,22 +372,7 @@ def diffraction_plot_template(theta_deg, d=1000, wavelength=400, iterations=25, 
     ax1.set_ylabel("y (arbitrary units)")
     ax1.set_aspect("equal", "box")
 
-    # --- Panel 2: N-slit diffraction intensity vs θ -------------------------
-    thetas = np.linspace(-70, 70, 2000)    # degrees
-    th_rad = np.radians(thetas)
-
-    beta = np.pi * d * np.sin(th_rad) / wavelength
-    beta_safe = np.where(np.isclose(beta, 0.0), 1e-12, beta)
-
-    intensity = (np.sin(N * beta_safe) / np.sin(beta_safe)) ** 2
-    intensity /= intensity.max()
-
-    ax2.plot(thetas, intensity)
-    ax2.set_xlabel(r"$\theta$ (degrees)")
-    ax2.set_ylabel("Normalized intensity")
-    ax2.set_title(f"Diffraction pattern, N = {N}")
-
-    # --- Panel 3: Superposition of N waves at this θ ------------------------
+    # --- Panel 2: Superposition of N waves at this θ ------------------------
     # Phase increment corresponding to this particular viewing angle θ
     beta_theta = np.pi * d * np.sin(theta_rad) / wavelength
 
@@ -394,16 +390,33 @@ def diffraction_plot_template(theta_deg, d=1000, wavelength=400, iterations=25, 
 
     # Plot individual waves faintly, superposition in bold
     for n in range(N):
-        ax3.plot(t, waves[n], alpha=0.2, linewidth=0.8)
-    ax3.plot(t, superposed, linewidth=2.0)
+        ax2.plot(t, waves[n], alpha=0.2, linewidth=0.8)
+    ax2.plot(t, superposed, linewidth=2.0)
 
-    ax3.set_xlabel("Time (arb. units)")
-    ax3.set_ylabel("Amplitude")
-    ax3.set_title(f"Superposition of {N} Waves at θ = {theta_deg:.1f}°")
+    ax2.set_xlabel("Time (arb. units)")
+    ax2.set_ylabel("Amplitude")
+    ax2.set_title(f"Superposition of {N} Waves at θ = {theta_deg:.1f}°")
+
+    # --- Panel 3: N-slit diffraction intensity vs θ -------------------------
+    thetas = np.linspace(-70, 70, 2000)    # degrees
+    th_rad = np.radians(thetas)
+
+    beta = np.pi * d * np.sin(th_rad) / wavelength
+    beta_safe = np.where(np.isclose(beta, 0.0), 1e-12, beta)
+
+    intensity = (np.sin(N * beta_safe) / np.sin(beta_safe)) ** 2
+    intensity /= intensity.max()
+
+    ax3.plot(thetas, intensity)
+    ax3.set_xlabel(r"$\theta$ (degrees)")
+    ax3.set_ylabel("Normalized intensity")
+    ax3.set_title(f"Diffraction pattern, N = {N}")
 
     return fig, (ax1, ax2, ax3)
 
 def plot_diffraction(theta):
+    clear_output(wait=True)
+    plt.close('all')
     d = 1000
     wavelength = 400
     fig, (ax1, ax2, ax3) = diffraction_plot_template(
@@ -442,7 +455,9 @@ def bragg_intensity_subplot(ax, d, wavelength):
     return ax
 
 def two_d_crystal_lattice(a,b,gamma,title='2D Crystal Lattice'):
-    fig,ax = plt.subplots(figsize=(3,3))
+    clear_output(wait=True)
+    plt.close('all')
+    fig,ax = plt.subplots(figsize=(3,3), dpi=72)
     gamma=np.radians(gamma)
     tv_b = np.array([b,0])
     
@@ -516,6 +531,8 @@ def point_reflection_subplot(ax1,x1,y1,x2,y2,theta):
     return ax1
 
 def reflection_two_points(x2=0.0, y2=0.0, theta=45):
+    clear_output(wait=True)
+    plt.close('all')
     # Fixed first point at origin
     x1 = 0.0
     y1 = 0.0
@@ -530,6 +547,7 @@ def reflection_two_points(x2=0.0, y2=0.0, theta=45):
     fig, (ax1, ax2, ax3) = plt.subplots(
         3, 1,
         figsize=(7, 9),
+        dpi=72,
         constrained_layout=True,
     )
 
@@ -554,11 +572,11 @@ def reflection_two_points(x2=0.0, y2=0.0, theta=45):
         ha="left",
     )
 
-    # ---- Panel 2: Bragg intensity vs θ for this d ----
-    bragg_intensity_subplot(ax2, d=d, wavelength=wavelength)
+    # ---- Panel 2: Two-wave interference for this θ and d ----
+    two_wave_interference_subplot(ax2, d=d, wavelength=wavelength, theta_rad=theta_rad)
 
-    # ---- Panel 3: Interference for this particular θ and d ----
-    two_wave_interference_subplot(ax3, d=d, wavelength=wavelength, theta_rad=theta_rad)
+    # ---- Panel 3: Bragg intensity vs θ for this d ----
+    bragg_intensity_subplot(ax3, d=d, wavelength=wavelength)
 
     plt.show()
     return fig, (ax1, ax2, ax3)
@@ -611,6 +629,8 @@ from matplotlib.ticker import MultipleLocator
 from matplotlib.ticker import MultipleLocator
 
 def bragg_plot(theta):
+    clear_output(wait=True)
+    plt.close('all')
     # theta comes in degrees from the widget
     theta_rad = np.radians(theta)
 
@@ -622,6 +642,7 @@ def bragg_plot(theta):
     fig, (ax1, ax2, ax3) = plt.subplots(
         3, 1,
         figsize=(7, 9),
+        dpi=72,
         constrained_layout=True,
     )
 
@@ -642,11 +663,11 @@ def bragg_plot(theta):
     ax1.set_aspect("equal", "box")
     ax1.set_title("Self-similar Bragg Construction")
 
-    # ---- Panel 2: Bragg intensity vs θ for this spacing d ----
-    bragg_intensity_subplot(ax2, d=d, wavelength=wavelength)
+    # ---- Panel 2: Two-wave interference for this θ and d ----
+    two_wave_interference_subplot(ax2, d=d, wavelength=wavelength, theta_rad=theta_rad)
 
-    # ---- Panel 3: Two-wave interference for this θ and d ----
-    two_wave_interference_subplot(ax3, d=d, wavelength=wavelength, theta_rad=theta_rad)
+    # ---- Panel 3: Bragg intensity vs θ for this spacing d ----
+    bragg_intensity_subplot(ax3, d=d, wavelength=wavelength)
 
     plt.show()
     return fig, (ax1, ax2, ax3)
@@ -887,49 +908,11 @@ def plot_planes(fig,ax,hkl,a=4.09):
     fig.text(0.6,0,'\n'.join([line_3,line_4]))
 
     return fig, ax 
-    
-import matplotlib.pyplot as plt
-import ipywidgets as widgets
-
-_MIRROR_STATE = {}
-
-def interactive_mirror_plot(a=4.0, figsize=(5, 5), h_range=(-2, 2), k_range=(-2, 2), l_range=(-2, 2)):
-    fig = plt.figure(figsize=figsize)
-    ax = fig.add_subplot(projection="3d")
-
-    # prevent auto-display duplicates
-    plt.close(fig)
-
-    # --- CRITICAL: ensure the canvas has an open comm before VBox tries to serialize it
-    try:
-        fig.canvas.open()   # ipywidgets.Widget.open()
-    except Exception:
-        # if open() isn't available for some reason, we'll fall back later
-        pass
-
-    h = widgets.IntSlider(value=1, min=h_range[0], max=h_range[1], step=1, description="h", continuous_update=True)
-    k = widgets.IntSlider(value=1, min=k_range[0], max=k_range[1], step=1, description="k", continuous_update=True)
-    l = widgets.IntSlider(value=1, min=l_range[0], max=l_range[1], step=1, description="l", continuous_update=True)
-
-    def _render(*_):
-        ax.cla()
-        fig.texts.clear()
-        plot_lattice(fig, ax, a)
-        plot_planes(fig, ax, (h.value, k.value, l.value), a)
-        fig.canvas.draw_idle()
-
-    for s in (h, k, l):
-        s.observe(_render, names="value")
-
-    _render()
-
-    ui = widgets.VBox([widgets.HBox([h, k, l]), fig.canvas])
-    _MIRROR_STATE.update({"ui": ui, "fig": fig, "ax": ax, "sliders": (h, k, l), "render": _render})
-    return ui
 
 def visualize_mirror_planes(h,k,l):
-    plt.cla()
-    fig = plt.figure(figsize=(4,5))
+    clear_output(wait=True)
+    plt.close('all')
+    fig = plt.figure(figsize=(4,5), dpi=72)
     a=4.0
     ax = fig.add_subplot(projection='3d')
     plot_lattice(fig,ax,a)

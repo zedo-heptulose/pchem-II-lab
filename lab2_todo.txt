@@ -1,0 +1,65 @@
+- [ ] actually... complete the assignment yourself. this will be more illuminating than anything else.
+
+- [ ] fix code cell formatting for multi-part coding activities
+- [ ] rephrase student learning objectives to be more concise
+- [ ] fix LaTeX formatting
+- [ ] check that all code works
+
+---
+- [ ] read literature, work more on best practices document
+- [ ] create a style sheet / template for future work. 
+
+-----
+
+---
+
+notes as I work through it 
+- learning objectives are verbose
+- opening paragraph - text is dense
+
+part 1 - single-slit diffraction
+- too much technical language
+- good content though...
+- coding challenges need to be separated.
+better for working memory. 
+
+- [ ] add explanation of functions
+- [ ] give students the beta function as an example
+- [ ] split up coding challenge parts into different cells
+- [ ] add more descriptive comments
+- [ ] explain uncertainty principle in description
+- [ ] fix LaTeX
+
+part 2 - phase differences and angular interference
+
+- [ ] put latex inline instead of on separate lines
+- [ ] speedup animations... maybe less DPI
+- [ ] explain why only that path length matters. unclear explanation here. 
+maybe use an image
+- [ ] switch position of diffraction pattern and superposition plot (both plots)
+- [ ] lower dpi for higher speedup
+
+- [ ] SRQ MUST ask students to notice that shifting x position does nothing
+this is important for understanding mirror planes!
+
+really beautiful visualization of diffraction, James did a great job here
+making the visualizations part of the explanation is a great idea too
+
+arm injury is stopping me.
+
+part 3
+
+k
+
+part 4
+- [ ] add `data/` directory prefix to files
+- [ ] add explanation of pattern of doing concrete thing and then 
+abstracting / genericizing
+- [ ] add instruction to plot spectrum
+
+---
+overall
+add subheadings and takeaways for working memory
+without loss of James' content
+- [ ] "---" below question prompts (easier to grade)
+- [ ] work on SRQs, enforce Bloom's
