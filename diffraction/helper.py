@@ -788,6 +788,7 @@ def truncate_points(xx,yy,zz,a=4.09):
     return new_xx, new_yy, new_zz
 
 def plot_planes(fig,ax,hkl,a=4.09):
+    fig.texts.clear()
     h, k, l = hkl
     wavelength = 1.54
 
@@ -886,15 +887,56 @@ def plot_planes(fig,ax,hkl,a=4.09):
     fig.text(0.6,0,'\n'.join([line_3,line_4]))
 
     return fig, ax 
+    
+import matplotlib.pyplot as plt
+import ipywidgets as widgets
+
+_MIRROR_STATE = {}
+
+def interactive_mirror_plot(a=4.0, figsize=(5, 5), h_range=(-2, 2), k_range=(-2, 2), l_range=(-2, 2)):
+    fig = plt.figure(figsize=figsize)
+    ax = fig.add_subplot(projection="3d")
+
+    # prevent auto-display duplicates
+    plt.close(fig)
+
+    # --- CRITICAL: ensure the canvas has an open comm before VBox tries to serialize it
+    try:
+        fig.canvas.open()   # ipywidgets.Widget.open()
+    except Exception:
+        # if open() isn't available for some reason, we'll fall back later
+        pass
+
+    h = widgets.IntSlider(value=1, min=h_range[0], max=h_range[1], step=1, description="h", continuous_update=True)
+    k = widgets.IntSlider(value=1, min=k_range[0], max=k_range[1], step=1, description="k", continuous_update=True)
+    l = widgets.IntSlider(value=1, min=l_range[0], max=l_range[1], step=1, description="l", continuous_update=True)
+
+    def _render(*_):
+        ax.cla()
+        fig.texts.clear()
+        plot_lattice(fig, ax, a)
+        plot_planes(fig, ax, (h.value, k.value, l.value), a)
+        fig.canvas.draw_idle()
+
+    for s in (h, k, l):
+        s.observe(_render, names="value")
+
+    _render()
+
+    ui = widgets.VBox([widgets.HBox([h, k, l]), fig.canvas])
+    _MIRROR_STATE.update({"ui": ui, "fig": fig, "ax": ax, "sliders": (h, k, l), "render": _render})
+    return ui
 
 def visualize_mirror_planes(h,k,l):
+    plt.cla()
     fig = plt.figure(figsize=(4,5))
     a=4.0
     ax = fig.add_subplot(projection='3d')
     plot_lattice(fig,ax,a)
     hkl = (h,k,l)
     plot_planes(fig,ax,hkl,a)
-
+    plt.show()
+    
 def interactive_mirror_plot():
     widgets.interact(visualize_mirror_planes,h=(-2,2,1),k=(-2,2,1),l=(-2,2,1))
 
@@ -1009,9 +1051,11 @@ def classify_cubic_spectra(hkl_list):
         result = 'simple cubic'
     return result
 
-def plot_spectrum(x,y):
-    plt.plot(x,y)
-    plt.title('intensity vs $2\\theta$')
-    plt.xlabel('$2\\theta$')
-    plt.ylabel('intensity')
+def plot_spectrum(x, y):
+    fig, ax = plt.subplots(figsize=(6, 3))
+    ax.plot(x, y)
+    ax.set_title(r'intensity vs $2\theta$')
+    ax.set_xlabel(r'$2\theta$')
+    ax.set_ylabel('intensity')
     plt.show()
+    return fig, ax
