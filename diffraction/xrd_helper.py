@@ -579,7 +579,6 @@ def reflection_two_points(x2=0.0, y2=0.0, theta=45):
     bragg_intensity_subplot(ax3, d=d, wavelength=wavelength)
 
     plt.show()
-    return fig, (ax1, ax2, ax3)
 
 def interactive_reflection_plot():
     widgets.interact(
@@ -670,7 +669,6 @@ def bragg_plot(theta):
     bragg_intensity_subplot(ax3, d=d, wavelength=wavelength)
 
     plt.show()
-    return fig, (ax1, ax2, ax3)
 
 def interactive_bragg_plot():
     widgets.interact(bragg_plot, theta=(1.0, 70.0, 0.1))
