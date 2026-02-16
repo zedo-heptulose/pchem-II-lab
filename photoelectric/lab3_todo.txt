@@ -5,7 +5,7 @@ TODO:
   - [ ] your task and point values
   - [ ] short response questions should follow a programming activity
 - [ ] change code scaffolding
-  - [ ] explicitly focus on decomposition - doing something in steps, then making a whole from it
+  - [ ] explicitly focus on decomposition - [ ]doing something in steps, then making a whole from it
 - [ ] theory stuff yaps a bit
   - [ ] make it more concise and listed
   - [ ] explanations use topics students are unfamiliar with. 
@@ -20,7 +20,7 @@ TODO:
     - [ ] p3.1 and p3.2 are very similar. probably pays to make one of these `pandas` or just add `pandas` as a fourth.
     - [ ] wait, performing numerical fitting of curves needs to be a goal. that's general-purpose skill.
     - [ ] actually manipulating tabular data with Pandas must be a goal as well. 
-    - [ ] general guidance - be concrete and concise with these. choose the most generally useful skills to focus on, the stuff students will use everywhere. Or the most important takeaways. 
+    - [ ] general guidance - [ ]be concrete and concise with these. choose the most generally useful skills to focus on, the stuff students will use everywhere. Or the most important takeaways. 
     - [ ] maybe unit conversions as a chemistry learning objective also? but they should be past that.
 - [ ] change questions
   - [ ] problem 1
@@ -61,7 +61,7 @@ TODO:
   - [ ] probably worth adding the pandas primer material somewhere. maybe can be a warmup in the beginning
   - [ ] or we just introduce the syntax in little code blocks as we go. defo need examples though.
 
-- [ ] work through it once - this was more clarifying than anything else last week
+- [ ] work through it once - [ ]this was more clarifying than anything else last week
 
 - [ ] okay, I realize a major structural problem with this lab. If we want to present it as a proof of quantum mechanics we need to have them process signals at different intensities and see that nothing changes. 
 - [ ] would take a while to do this. but it's doable. would just need to find that data somewhere.
@@ -75,26 +75,26 @@ Okay we shouldn't have two problems before students touch code.
 
 changelog 
 General:
-- broke up big blocks of text into shorter paragraphs and bulletted lists.
-- make descriptions a bit more concise, changed unfamiliar terms to familiar ones.
+- [ ]broke up big blocks of text into shorter paragraphs and bulletted lists.
+- [ ]make descriptions a bit more concise, changed unfamiliar terms to familiar ones.
 
-- moved functions and problem 2, as well as the first coding activity, to "WARMUP - FUNCTIONS AND ABSTRACTION" at the start of the assignment, before any of the photoelectric effect material gets introduced.
+- [ ]moved functions and problem 2, as well as the first coding activity, to "WARMUP - [ ]FUNCTIONS AND ABSTRACTION" at the start of the assignment, before any of the photoelectric effect material gets introduced.
 
-- moved problem 1 questions and some paragraph content to be integrated throughout the assignment, after associated code.
+- [ ]moved problem 1 questions and some paragraph content to be integrated throughout the assignment, after associated code.
 
-- will add section where students compare effect of changing intensity and of changing wavelength. this is kind of the whole point of the lab. we never showed change in intensity. 
+- [ ]will add section where students compare effect of changing intensity and of changing wavelength. this is kind of the whole point of the lab. we never showed change in intensity. 
 
-- changed part 3 to part 1
-- added intensity comparison component.
+- [ ]changed part 3 to part 1
+- [ ]added intensity comparison component.
 
 --------
 
 new structure:
-- functions warmup w/ conversions
-- visualizing one dataset and extracting V0
-- making a function and doing this for all of them
-- visualizing the results (realizing that intensity doesn't matter, realizing quantization is real)
-- calculating energy-frequency proportionality constant (don't tell them it's Planck's, let them find out) and calculating the work function of the metal
+- [ ]functions warmup w/ conversions
+- [ ]visualizing one dataset and extracting V0
+- [ ]making a function and doing this for all of them
+- [ ]visualizing the results (realizing that intensity doesn't matter, realizing quantization is real)
+- [ ]calculating energy-frequency proportionality constant (don't tell them it's Planck's, let them find out) and calculating the work function of the metal
 
 okay great, that's a warmup and 4 parts. only requires minor modification based on what we have now and the addition of one part. works in theory much better than it did last year. also works in metacognition about the programming material much better than it did last year thanks to James' function stuff.
 
@@ -127,11 +127,11 @@ Tomorrow:
 -----
 
 TO FINISH:
-- determine code scaffolding structure
-- move description text back in and modify as needed
-- move SRQs back in and modify as needed
-- fix formatting
-- make student version
+- [ ]determine code scaffolding structure
+- [ ]move description text back in and modify as needed
+- [ ]move SRQs back in and modify as needed
+- [ ]fix formatting
+- [ ]make student version
 
 okay, so the first thing is to clarify that.
 
@@ -139,24 +139,24 @@ STRUCTURE:
 current:
 warmup: students write functions to perform unit conversions 
 ## PART 1:
-A - file I/O and plotting with a dataframe
-B - linear regression and finding a root
-  - if we just give them a helper function this is appropriate
-  - ask them to write a function that accepts x and y data and returns slope, intercept, and root
-C - filtering the data
-  - feels like a bit too much at once. If they make a function in the last part though, it's not bad.
+A - [ ]file I/O and plotting with a dataframe
+B - [ ]linear regression and finding a root
+  - [ ]if we just give them a helper function this is appropriate
+  - [ ]ask them to write a function that accepts x and y data and returns slope, intercept, and root
+C - [ ]filtering the data
+  - [ ]feels like a bit too much at once. If they make a function in the last part though, it's not bad.
 questions 
 currently missing questions.
 
 changes
-  - have them write a function which gets their slope and intercept; and a function which plots everything. make this part C; make filtering part D. Makes the filtering part less overwhelming, less loose code.
-- no - have them write the small function to get slope / intercept as part B (then using it) and we keep this as-is.
+  - [ ]have them write a function which gets their slope and intercept; and a function which plots everything. make this part C; make filtering part D. Makes the filtering part less overwhelming, less loose code.
+- [ ]no - [ ]have them write the small function to get slope / intercept as part B (then using it) and we keep this as-is.
 
 ## PART 2
-A - students collect the work from part 1 and make a reusable function
-B - students use a for loop to load all the data for one intensity (example given)
-C - students use a nested for loop to load all the data for all intensities and all wavelengths
-D - students make a function that does all this
+A - [ ]students collect the work from part 1 and make a reusable function
+B - [ ]students use a for loop to load all the data for one intensity (example given)
+C - [ ]students use a nested for loop to load all the data for all intensities and all wavelengths
+D - [ ]students make a function that does all this
 
 notes
 Part B/C feels like a big leap and a bit poorly scaffolded. wish I could show them an example of a for loop first. 
@@ -167,8 +167,8 @@ we can probably also scrap part D, might just be fluff. or it can be moved to th
 
 ## PART 3
 Changing Units
-A - students use their dataframe to convert wavelengths to frequencies
-B - students plot wavelengths and frequencies and examine the behavior qualitatively
+A - [ ]students use their dataframe to convert wavelengths to frequencies
+B - [ ]students plot wavelengths and frequencies and examine the behavior qualitatively
 
 notes
 this part is really anemic, I don't like this.
@@ -177,19 +177,102 @@ then they're making the plots themselves instead of us providing a helper functi
 also allows us to use for loops a bit more which was the other learning objective.
 
 okay great.
-A - students apply a function to convert wavelength to frequency
-B - students filter their dataframe for only one value of intensity and plot v0 vs frequency; filter  wavelength and plot v0 vs intensity
-C - students use a for loop to create two plots where we visualize all of them in different colors on the 2D plot
+A - [ ]students apply a function to convert wavelength to frequency
+B - [ ]students filter their dataframe for only one value of intensity and plot v0 vs frequency; filter  wavelength and plot v0 vs intensity
+C - [ ]students use a for loop to create two plots where we visualize all of them in different colors on the 2D plot
 
 ## PART 4
-A - students plot V0 vs frequency
-B - students perform linear fit and calculate h and phi
-C - students find cutoff frequency and wavelength
+A - [ ]students plot V0 vs frequency
+B - [ ]students perform linear fit and calculate h and phi
+C - [ ]students find cutoff frequency and wavelength
 
 notes
-for this part, merge A and B - students perform linear fit and plot here
+for this part, merge A and B - [ ]students perform linear fit and plot here
 then B becomes calculating h from the slope
 and C becomes calculating the work function of the metal
 
+-----------------------------
+
+what needs to be changed from the Claude draft?
+
+okay this is the only way to work on these.
+go draft by draft. 
+make list of things to do and do only those things.
+make list of new things to do at the end.
+this is the only way to stay focused and avoid the nightmare.
+makes it clear just what you're doing and gives you a clear gauge of progress. 
+
+- [x] functions warmup 
+	- [x] needs to be a bit shorter.
+- [x]part 1
+	- [x]change the titles
+	- [x]replace byjus figure
+	- [x]description should be more concise
+	- [x]coding activity
+		- [x]no docstring, students just do this. 
+		- [x](this doesn't need to be a learning goal, can be given as an example)
+		- [x]okay, give slope/intercept function as example. 
+		- [x]then ask them to make v0 finding function.
+		- [x]then have them visualize
+		- [x]shouldn't tell students it's bad! they find this out themselves.
+	- [x]questions 
+		- [x]a good
+		- [x]b don't ask about photons this early, they don't know they exist yet
+		- [x]c ]this is a good question
+		- [x]d ]we don't ask about quantization yet, they 'discover' it themselves
+- [x] part 2
+	- [x]check title
+	- [x]rephrase the intro, I do not like the prose
+        - [x]rephrase the parts about abstraction, kinda cringe
+	- [x]coding activity
+		- [x]A rephrase abstraction stuff
+		- [x]B*your task*: annotate every line of this script and explain what it's doing. 
+			otherwise happy with the organization of this
+		- []C need to figure out how to scaffold this (make the student version and it will be clear)
+	- [x]questions
+		- [x] scrap old chemistry questions (relevant for next part)
+		- [ ] should come back and write better coding questions here... but getting the students to understand why we're doing this is probably good.
+- [x] part 3
+	- [x] change title
+	- [x] intro prose is a little cringe
+	- [ ] coding activity
+		- [x] A - pretty much fine actually
+			- [ ] scaffolding must provide an example of assigning a new column but ask them to do this
+			- [ ] have students add an electron kinetic energy column?
+		- [ ] B - separate these into different code cells
+			- [ ] scaffolding should give one as an example and ask students to generalize to make the other from scratch
+		- [x] C - simplify code not to use fig and subplots.
+			- [ ] likewise in scaffolding, students are given an example and asked to make a plot themselves
+
+	- [ ] questions
+		- [ ] these are fine. see if we can recycle James' questions from part 2 
+- [x] Part 4
+	- [x] title is fine but double check
+	- [x] change discussion of Einstein's photoelectric equation to introduce in general terms
+		- [x] don't name the slope as Planck's constant, let the students find that out themselves
+	- [x] coding activity
+		- [x] A - we don't need to average, this is meaningless added complexity. just have them plot 100% intens and regression
+		- [x] B - remove Planck's constant from the slope
+		- [x] change discussion of units.
+		- [x] C - calculating energy required to remove electron from metal
+	- [ ] questions
+		- [x] a - this is a bad question and we will get rid of it.
+		- [x] b - probably can use James' old reflection content here.
+		- [x] c - "compare to experimental values, where might error have come from?"
+		- [x] new a - "Do you recognize the slope as a beloved physical constant? Write an equation for the energy of a photon based on your findings.
+
+- [x] reflection - already happy with these questions.
+
+- [ ] general 
+	- [ ] inconsistent use of #A and Part #A
+	- [ ] make scaffolded student version with incomplete code.
+	- [ ] add learning objectives to each of these.
+	- [ ] add sample answers to the worked version.
+	- [ ] delete all the old various files
+	- [ ] remove every use of the em dash
+	- [ ] ensure consistent "your task" 
 
 
+- [ ]worry I'm changing too much of James' stuff
+- [ ]well.. the functions stuff is what he really cared about. leave the function stuff in since that's what matters to him
+- [ ]he said he wasn't happy with the rest. to me that's permission to change it
