@@ -1,0 +1,126 @@
+
+- [ ] Intro
+  - [ ] intro text looks good. might modify depending on changes to the lab
+  - [ ] proposed learning objectives:
+    - chemistry:
+      - Solve the Schrodinger equation for an electron using numerical methods. 
+      - Explain features of particle-in-a-box wavefunctions and their energies.
+      - Apply the particle-in-a-box model to conjugated polyenes to predict their absorption wavelength.
+      - Evaluate the tradeoffs of different physical models.
+    - programming:
+      - Perform numerical optimization routines with `scipy`.
+      - Fit nonlinear curves to data.
+      - Perform quantum chemical calculations with the `psi4` software package.
+
+  - [ ] add table of contents
+    
+proposed structural changes:
+- move part 1 (warmup) to a separate assignment, since this should come earlier in the semester and shouldn't be glued to lab 4 when we publish
+
+- move old curve fitting warmup back to this assignment
+
+- get rid of part 2 completely; just have students numerically optimize to solve the SE without analytic stuff (which they do in lecture anyways) (we can describe analytic solutions in the description of part 3)
+
+- this gives us a warmup and 4 parts, like we've had for the other assignments so far
+
+- [ ] Part 1 (warmup) -- replace/ move to separate assignment
+  - [ ] students should still definitely do this material this week if this is something they're struggling with
+
+- [ ] new warmup?
+  - [ ] about the concept of physical models. "all models are wrong, some models are useful."
+  - [ ] bring back curve fitting thing. good introduction for modelling data with functions, feeds well into what is currently part 3 
+
+
+- [ ] Part 2 (analytically solving the SE) -- remove/ merge with part 3
+ 
+- [ ] Part 3 (computational experiment)
+
+  - [ ] description
+    - content is good.
+    - [ ] Use <psi|H|psi>/<psi|psi> as what we optimize instead (and show integral form) with the hamiltonian just being the kinetic energy operator. will make hartree-fock make more sense after this.
+    - [ ] make this a bit more concise.
+      - last semester students asked me a lot of questions that suggested they just did not read my descriptions... we need to keep these short enough that students will not glaze over them
+    
+  - [ ] coding activity
+    - [ ] break these three components (construct trial functions, run minimization, comapre to analytic) into coding activities A,B,C
+    - [ ] possibly students should carry out the optimization themselves with `scipy.optimize` (if we're bringing in curve fitting stuff)? If time permits.
+
+  - [ ] SRQs
+    - the text after the coding activity kind of just tells students what they saw. I think we should ask them about it in SRQs instead.
+    - [ ] remove post-coding text
+    - [ ] work same material into SRQs
+    - proposed SRQs, based on current ones and on post-coding text: 
+      - a) Did the converged result of minimization depend on your initial guess? If so, how?
+      - b) Explain the relationship between your converged result and the analytic solution. 
+      - c) Explain how this technique might be useful for real chemical systems where no analytic solution exists.
+  
+
+- [ ] Part 4 (energy levels)
+
+  - [ ] description
+    - [ ] If possible, we should let the students find the equation for energy levels themselves instead of giving it to them.
+    - [ ] change to general description of how energy eigenvalues work, have students get the formula themselves.
+
+  - [ ] coding activity
+    - [ ] students should make the plots themselves instead of calling a given function
+      - so that they can keep practicing the skills they already have
+
+    - suggestion:
+      - Part A: students write a function for the analytic solutions of the PIB
+      - Part B: students create data points with a for loop and plot their data (reinforcing material from last lab)
+    
+    - more ambitious suggestion for this part, time permitting:
+      - Part A: students call their energy function (from part 3) on analytic (or variationally optimized!) wavefunctions for different values of n and L.
+      - Part B: students plot their energy versus N and L.
+      - Part C: students fit an expression for energy as a function of n and L using `scipy.optimize`
+
+
+  - [ ] SRQs
+    - [ ] the question about number of nodes is poorly placed because we don't visualize wavefunctions in this part. maybe move this to part 3?
+    - proposed SRQs:
+      a) Predict the shape of the curve when L = n, and when L = n - 1.
+      b) (bonus) Use this to make a prediction about conjugated polyenes. 
+     
+- Part 5 (computational chemistry)
+  - [ ] descriptions
+    - [ ] condense Hartree-Fock material (we can approach it from a higher level)
+    - [ ] need to explain orbital occupations, HOMO-LUMO gap, spectroscopy
+  
+  - [ ] coding activity
+    - [ ] Part A: Students make molecules with SMILES (we might cut this and give them .xyz files. lot to focus on here)
+    - [ ] Part B: Students run psi4 calculations and obtain total energies and HOMO-LUMO gaps
+    - [ ] Part C: Students visualize orbitals 
+     
+  - [ ] SRQs
+    - proposed SRQs: (basically the ones already here but reframed a bit)
+    - a) Compare and contrast the Hartree-Fock procedure with your experience of solving wavefunctions in lecture.
+    - b) look at the p orbitals (nn-nn). What structural similarities do these have to the PIB wavefunctions? What is different about them?
+    - c) What might account for the differences in the energy levels predicted by HF for polyenes versus the particle in a box model?
+
+- Part 6 (comparing PIB and HF predictions)
+  - [ ] descriptions
+    - [ ] talk about modeling, how HF is a much more detailed model.
+    - [ ] talk about shapes versus absolute values and empirical parameters
+    - [ ] explain analogy between polyenes and PIB (orbital occupations, energy levels, etc)
+  - [ ] coding activitiy
+    - [ ] part A: students plot HOMO-LUMO gap for a variety of polyenes
+    - [ ] part B: students make a HOMO-LUMO predictor from PIB and plot it versus real energies
+    - [ ] part C: students add linear parameters to PIB model and optimize, then compare result
+  - [ ] SRQs
+    - (todo)
+
+- Reflection 
+  - [ ] model based thinking
+  - [ ] numerical procedures
+  - [ ] metacognitive something or the other
+
+----
+
+overall thoughts / feedback
+- content choice is good. teaching students about numerical optimization routines and letting them work with an example is good.
+- also good to flag data types. probably something we should have done near the start of the semester...
+- good description of Hartree-Fock. just worry the students won't have the bandwidth for it. We can approach from a higher level of abstraction for this purpose
+- descriptions should be short and have friendly formatting (bulleted lists etc). students just won't read them if they're too long in my experience.
+- We should let students discover the result for themselves rather than telling them what it will be, as much as possible. If we want them to notice something, just make it the topic of an SRQ. Well-scaffolded exploration is flagged as leading to better learning outcomes in literature (and it is less writing for us!)
+
+

@@ -1,0 +1,5 @@
+molecule,formula,n_double_bonds,n_pi_electrons,n_carbons,lambda_max_nm,energy_eV,energy_cm-1,reference_notes
+"1,3-butadiene",C4H6,2,4,4,217,5.71,46083,"OpenStax Organic Chemistry; McMurry; widely agreed value"
+"1,3,5-hexatriene",C6H8,3,6,6,258,4.81,38760,"OpenStax Organic Chemistry; some sources cite 253-262 nm depending on conditions"
+"1,3,5,7-octatetraene",C8H10,4,8,8,290,4.28,34483,"OpenStax Organic Chemistry; Leopold et al. J. Mol. Spectrosc. 114 54 (1985) for Ar matrix data"
+"1,3,5,7,9-decapentaene",C10H12,5,10,10,334,3.71,29940,"Chauhan & Patel Der Pharma Chemica 8 67 (2016); some sources cite ~340 nm"
