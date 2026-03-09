@@ -1,0 +1,51 @@
+Changes I would make to the lab
+
+Overall actually very happy with this compared to past labs, not much I would change. 
+
+However:
+General
+- [ ] import helper functions and sklearn stuff in the sections that use them, not all at the beginning
+- [ ] Maybe don't tell the students it's synthetic data, they don't need to know.
+- [ ] provide a folder of files rather than a zip file with the spectra (easier to work with) (just provide a zip file with the student notebook, helper python file, and folder containing spectra that the students can inflate)
+
+(for my human coworker)
+- [ ] The descriptions can be longer if you want to add content! We can probably have 1-3 paragraphs for each of these. They're fine as-is though if you don't want to.
+
+Warmup
+- [ ] Genericize this, don't use QD data.
+
+Part 1
+- [ ] have students write code / provide code and have students comment it
+  - they can write their own peak picker or we can use signal processing libraries (probably something in scipy)
+  - The minimizing load is laudable, but I think they can do this stuff at this point in the semester. Good to get reps in of stuff they've already done (like unit conversions) right?
+
+Part 2
+- [ ] Part 2 is good, just make sure it matches whatever edits you make to part 1
+
+Part 3
+- [ ] Use scipy.optimize.curve_fit rather than a helper function for realism
+- [ ] Would like to organize the provided PIB and Brus' equations so that the curve fit parameters are Ebulk and the effective mass of the electron / hole.
+
+Epib(r) = Egap + (pi**2)/(8*m_e*r)**2)
+(where Egap (bulk bandgap) and m_e (effective mass of electron) are the optimizable parameters)
+(in atomic units, where l = 2*r)
+
+and then Brus' model where we add a hole with its own effective mass
+Ebruh(r) = Egap + (pi**2)/(8 * r**2) * (1/m_e + 1/m_h)
+where Egap, m_e and m_h (effective mass of hole) are the optimizable parameters
+Brus' model has r**2 dependence of both electron and hole!
+
+  - reason being, students can think about model curve fitting optimization not just as a tool for making predictions, but also the optimized parameters themselves as having physical interpretation (bandgap, effective mass, etc)
+
+- [ ]  provide brus' model as a starting place, no freebies for students, they need to be creative
+- [ ] SRQs: 
+
+Part 4
+
+
+Reflection
+- [ ] remove reference to synthetic data, it's behind the curtain for the scrubs
+
+references
+- [ ] add reference for peak data, state that data is synthetic here but nowhere else (https://pubs.acs.org/doi/10.1021/cm034081k 
+)
